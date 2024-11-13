@@ -1,0 +1,6 @@
+@AddressBookAPI_HostAddress = http://localhost:5136
+
+GET {{AddressBookAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

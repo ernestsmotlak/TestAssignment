@@ -1,0 +1,48 @@
+# Build artifacts
+bin/
+obj/
+Debug/
+Release/
+
+# Visual Studio temporary files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider/JetBrains specific files
+.idea/
+*.sln.iml
+
+# User-specific files
+*.userprefs
+
+# Dependency directories
+packages/
+.vscode/
+
+# Log files
+*.log
+
+# Configuration
+appsettings*.json
+appsettings.Development.json
+
+# Database files
+*.db
+*.db-journal
+
+# Resharper/Code cleanup
+_ReSharper*/
+*.DotSettings.user
+resharper.xml
+
+# dotnet tools
+*.nupkg
+*.snupkg
+
+# Generated files
+*.generated.cs
+*.gen.cs
+
