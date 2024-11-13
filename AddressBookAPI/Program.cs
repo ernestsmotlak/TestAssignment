@@ -7,21 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Add MVC services
+builder.Services.AddControllers(); // This is for API controllers, not views
+
 var app = builder.Build();
 
-
-
-// Map endpoints here
-app.MapGet("/data", async (AppDbContext db) =>
-{
-    return await db.Contacts.ToListAsync();
-});
-
-app.MapGet("/specificUser", async(AppDbContext db) => {
-    var specificUser = await db.Contacts.Where(contact => contact.FirstName == "Macek").ToListAsync();
-    return specificUser;
-});
-
-
+// Configure the HTTP request pipeline.
+app.MapControllers(); // This maps the controllers
 
 app.Run();
