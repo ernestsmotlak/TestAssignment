@@ -1,9 +1,25 @@
 <div class="container mt-4">
-  <h1 style="width: 50%; margin: 0 auto; background-color: bisque;">Contact List</h1>
+  <h1 style="width: 50%; margin: 0 auto; background-color: bisque">
+    Contact List
+  </h1>
+  
+  <div *ngIf="selectedContact" class="contact-details">
+    <h2>Contact Details</h2>
+    <p><strong>First Name:</strong> {{ selectedContact.firstName }}</p>
+    <p><strong>Last Name:</strong> {{ selectedContact.lastName }}</p>
+    <p><strong>Address:</strong> {{ selectedContact.address }}</p>
+    <p><strong>Phone Number:</strong> {{ selectedContact.phoneNumber }}</p>
+  </div>
 
   <!-- Contact List -->
-  <ul class="list-group mt-3 w-50" style="margin: 0 auto;">
-    <li *ngFor="let contact of contacts" class="list-group-item mb-3">
+  <ul class="list-group mt-3 w-50" style="margin: 0 auto">
+    <li
+      *ngFor="let contact of contacts"
+      class="list-group-item mb-3"
+      (click)="selectContact(contact)"
+      [class.selected]="selectedContact === contact"
+      [style.cursor]="'pointer'"
+    >
       <strong>{{ contact.firstName }} {{ contact.lastName }}</strong
       ><br />
       Address: {{ contact.address }}<br />
