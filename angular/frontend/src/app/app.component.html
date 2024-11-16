@@ -1,10 +1,11 @@
 <div class="container mt-4">
-  <h1>Contact List</h1>
-  
+  <h1 style="width: 50%; margin: 0 auto; background-color: bisque;">Contact List</h1>
+
   <!-- Contact List -->
-  <ul class="list-group mt-3">
-    <li *ngFor="let contact of contacts" class="list-group-item">
-      <strong>{{ contact.firstName }} {{ contact.lastName }}</strong><br />
+  <ul class="list-group mt-3 w-50" style="margin: 0 auto;">
+    <li *ngFor="let contact of contacts" class="list-group-item mb-3">
+      <strong>{{ contact.firstName }} {{ contact.lastName }}</strong
+      ><br />
       Address: {{ contact.address }}<br />
       Phone: {{ contact.phoneNumber }}
     </li>
