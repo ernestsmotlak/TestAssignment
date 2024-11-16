@@ -59,5 +59,31 @@ namespace AddressBookAPI.Controllers
             return CreatedAtAction(nameof(GetContacts), new { id = contact.Id }, contact);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateContact(int id, [FromBody] Contact updatedContact)
+        {
+            if (id != updatedContact.Id)
+            {
+                return BadRequest("Contact ID mismatch.");
+            }
+
+            // Find the existing contact
+            var existingContact = await _db.Contacts.FindAsync(id);
+            if (existingContact == null)
+            {
+                return NotFound(new { message = "Contact not found." });
+            }
+
+            // Update the contact properties
+            existingContact.FirstName = updatedContact.FirstName;
+            existingContact.LastName = updatedContact.LastName;
+            existingContact.Address = updatedContact.Address;
+            existingContact.PhoneNumber = updatedContact.PhoneNumber;
+
+            // Save changes to the database
+            await _db.SaveChangesAsync();
+
+            return NoContent(); // Return 204 No Content for successful update
+        }
     }
 }

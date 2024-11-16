@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 
 // Define and export the Contact interface
 export interface Contact {
-  id: number;
+  id?: number;
   firstName: string;
   lastName: string;
   address: string;
   phoneNumber: string;
 }
+
 
 @Injectable({
   providedIn: 'root',
@@ -29,4 +30,9 @@ export class ContactService {
     const createContactUrl = `${this.apiUrl}new`; // Target /api/contacts/new
     return this.http.post<Contact>(createContactUrl, contact);
   }
+  updateContact(contact: Contact): Observable<void> {
+    const url = `${this.apiUrl}${contact.id}`; // API endpoint: /api/contacts/{id}
+    return this.http.put<void>(url, contact);
+  }
+
 }
