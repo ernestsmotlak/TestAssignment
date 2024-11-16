@@ -26,9 +26,9 @@
       <p><strong>Last Name:</strong> {{ selectedContact.lastName }}</p>
       <p><strong>Address:</strong> {{ selectedContact.address }}</p>
       <p><strong>Phone Number:</strong> {{ selectedContact.phoneNumber }}</p>
-
+    
       <div class="action-buttons mt-3">
-        <button class="btn btn-danger">Delete</button>
+        <button class="btn btn-danger" (click)="deleteContact(selectedContact.id!)">Delete</button>
         <button class="btn btn-primary" (click)="enableUpdateContact()">Update</button>
       </div>
     </div>

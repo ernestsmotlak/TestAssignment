@@ -11,7 +11,6 @@ export interface Contact {
   phoneNumber: string;
 }
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -35,4 +34,8 @@ export class ContactService {
     return this.http.put<void>(url, contact);
   }
 
+  deleteContact(contactId: number): Observable<void> {
+    const url = `${this.apiUrl}${contactId}`; // API endpoint: /api/contacts/{id}
+    return this.http.delete<void>(url);
+  }
 }

@@ -86,4 +86,28 @@ export class AppComponent implements OnInit {
     // Add the new contact to the list
     this.contacts.push({ ...newContact, id: this.contacts.length + 1 });
   }
+
+  deleteContact(contactId: number) {
+    if (confirm('Are you sure you want to delete this contact?')) {
+      this.contactService.deleteContact(contactId).subscribe({
+        next: () => {
+          console.log('Contact deleted successfully:', contactId);
+          alert('Contact deleted successfully.');
+  
+          // Remove the deleted contact from the contacts array
+          this.contacts = this.contacts.filter(contact => contact.id !== contactId);
+  
+          // Clear selected contact if it was deleted
+          if (this.selectedContact?.id === contactId) {
+            this.selectedContact = null;
+            this.isUpdateMode = false; // Exit update mode if active
+          }
+        },
+        error: (err) => {
+          console.error('Error deleting contact:', err);
+          alert('Failed to delete contact.');
+        },
+      });
+    }
+  }
 }
