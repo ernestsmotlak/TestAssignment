@@ -50,6 +50,7 @@ export class AppComponent implements OnInit {
     this.contactService.updateContact(this.selectedContact).subscribe({
       next: () => {
         alert('Contact updated successfully.');
+        console.log('Contact updated successfully:', this.selectedContact);
 
         const index = this.contacts.findIndex(
           (c) => c.id === this.selectedContact!.id
