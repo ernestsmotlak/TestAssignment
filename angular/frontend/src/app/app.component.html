@@ -17,9 +17,16 @@
     *ngIf="showAddContactForm"
     (contactAdded)="addContact($event)"
   ></add-contact>
-
+  
   <!-- Contact List -->
   <ul class="list-group mt-3 w-50" style="margin: 0 auto">
+    <div *ngIf="selectedContact" class="contact-details">
+      <h2>Contact Details</h2>
+      <p><strong>First Name:</strong> {{ selectedContact.firstName }}</p>
+      <p><strong>Last Name:</strong> {{ selectedContact.lastName }}</p>
+      <p><strong>Address:</strong> {{ selectedContact.address }}</p>
+      <p><strong>Phone Number:</strong> {{ selectedContact.phoneNumber }}</p>
+    </div>
     <li
       *ngFor="let contact of contacts"
       class="list-group-item mb-3"
@@ -33,13 +40,4 @@
       Phone: {{ contact.phoneNumber }}
     </li>
   </ul>
-
-  <!-- Display Selected Contact Details -->
-  <div *ngIf="selectedContact" class="contact-details">
-    <h2>Contact Details</h2>
-    <p><strong>First Name:</strong> {{ selectedContact.firstName }}</p>
-    <p><strong>Last Name:</strong> {{ selectedContact.lastName }}</p>
-    <p><strong>Address:</strong> {{ selectedContact.address }}</p>
-    <p><strong>Phone Number:</strong> {{ selectedContact.phoneNumber }}</p>
-  </div>
 </div>
