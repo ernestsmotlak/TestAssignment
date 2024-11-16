@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ContactService, Contact } from './contact.service';
 import { CommonModule } from '@angular/common'; // Required for *ngFor
+import { AddContactComponent } from './add-contact/add-contact.component'; // Import AddContactComponent
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   standalone: true, // Marking component as standalone
-  imports: [CommonModule], // Only CommonModule is required for *ngFor, no HttpClientModule needed here
+  imports: [CommonModule, AddContactComponent], // Import AddContactComponent
 })
 export class AppComponent implements OnInit {
   contacts: Contact[] = [];
@@ -28,5 +29,10 @@ export class AppComponent implements OnInit {
     } else {
       this.selectedContact = contact; // Show details for the clicked contact
     }
+  }
+
+  addContact(newContact: Contact) {
+    // Add the new contact to the list
+    this.contacts.push({ ...newContact, id: this.contacts.length + 1 });
   }
 }
