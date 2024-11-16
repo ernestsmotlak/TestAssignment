@@ -85,5 +85,22 @@ namespace AddressBookAPI.Controllers
 
             return NoContent(); // Return 204 No Content for successful update
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteContact(int id)
+        {
+            // Find the contact by ID
+            var contact = await _db.Contacts.FindAsync(id);
+            if (contact == null)
+            {
+                return NotFound(new { message = "Contact not found." });
+            }
+
+            // Remove the contact from the database
+            _db.Contacts.Remove(contact);
+            await _db.SaveChangesAsync();
+
+            return NoContent(); // Return 204 No Content for a successful deletion
+        }
     }
 }
