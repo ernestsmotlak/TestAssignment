@@ -1,7 +1,7 @@
 .selected {
-    background-color: #e0f7fa !important;
-    font-weight: bold;
-  }
+  background-color: #e0f7fa !important;
+  font-weight: bold;
+}
 
 .contact-details {
   width: 50%;
@@ -31,3 +31,25 @@
 .contact-details strong {
   color: #000;
 }
+
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .btn-success:hover {
+    background-color: #218838;
+  }
+  
+  .contact-details {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  

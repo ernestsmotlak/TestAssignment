@@ -35,6 +35,29 @@ namespace AddressBookAPI.Controllers
             return Ok(specificUser); // Return filtered contacts as JSON
         }
 
-        // Additional actions can be added for creating, updating, deleting, etc.
+        
+        [HttpPost("new")]
+        public async Task<ActionResult<Contact>> CreateContact([FromBody] Contact contact)
+        {
+            if (contact == null)
+            {
+                return BadRequest("Contact is null.");
+            }
+
+            // Check if the phone number already exists
+            bool phoneNumberExists = await _db.Contacts.AnyAsync(c => c.PhoneNumber == contact.PhoneNumber);
+            if (phoneNumberExists)
+            {
+                return Conflict(new { message = "A contact with this phone number already exists." });
+            }
+
+            // Add the new contact to the database
+            _db.Contacts.Add(contact);
+            await _db.SaveChangesAsync();
+
+            // Return the created contact with a 201 Created response
+            return CreatedAtAction(nameof(GetContacts), new { id = contact.Id }, contact);
+        }
+
     }
 }

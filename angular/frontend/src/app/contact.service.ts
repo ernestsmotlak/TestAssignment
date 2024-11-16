@@ -12,16 +12,21 @@ export interface Contact {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ContactService {
+  private apiUrl = 'http://localhost:5136/api/contacts/'; // Base API endpoint
 
-  private apiUrl = 'http://localhost:5136/api/contacts/';  // Your API endpoint
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // Method to get all contacts
   getContacts(): Observable<Contact[]> {
-    return this.http.get<Contact[]>(this.apiUrl);  // Return an Observable of Contact array
+    return this.http.get<Contact[]>(this.apiUrl); // Return an Observable of Contact array
+  }
+
+  // Method to create a new contact
+  addContact(contact: Contact): Observable<Contact> {
+    const createContactUrl = `${this.apiUrl}new`; // Target /api/contacts/new
+    return this.http.post<Contact>(createContactUrl, contact);
   }
 }

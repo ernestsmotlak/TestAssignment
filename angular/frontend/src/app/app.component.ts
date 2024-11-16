@@ -13,6 +13,7 @@ import { AddContactComponent } from './add-contact/add-contact.component'; // Im
 export class AppComponent implements OnInit {
   contacts: Contact[] = [];
   selectedContact: Contact | null = null; // Track the currently selected contact
+  showAddContactForm: boolean = false; // Control visibility of Add Contact form
 
   constructor(private contactService: ContactService) {}
 
@@ -20,6 +21,10 @@ export class AppComponent implements OnInit {
     this.contactService.getContacts().subscribe((data: Contact[]) => {
       this.contacts = data;
     });
+  }
+
+  toggleAddContactForm() {
+    this.showAddContactForm = !this.showAddContactForm; // Toggle visibility
   }
 
   selectContact(contact: Contact) {
