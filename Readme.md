@@ -2,6 +2,7 @@
     -   sqlcmd -S localhost -U sa -P password 
         -   za bazo
     -   dotnet run
+    - docker-compose up -d
 
 ## Return here
 ```
