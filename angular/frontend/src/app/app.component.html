@@ -3,6 +3,50 @@
     Contact List
   </h1>
 
+  <div class="pagination-controls">
+    <!-- Page Size Selector -->
+    <label for="pageSize">Page Size:</label>
+    <select
+      id="pageSize"
+      [(ngModel)]="pageSize"
+      (change)="updatePageSize(pageSize)"
+    >
+      <option *ngFor="let size of [5, 10, 20, 50]" [value]="size">
+        {{ size }}
+      </option>
+    </select>
+  
+    <!-- Jump to Page -->
+    <label for="jumpPage">Go to Page:</label>
+    <input
+      id="jumpPage"
+      type="number"
+      [(ngModel)]="currentPage"
+      (change)="jumpToPage(currentPage)"
+      min="1"
+      [max]="totalPages"
+    />
+  
+    <!-- Previous and Next Buttons -->
+    <button
+      class="btn btn-secondary"
+      [disabled]="currentPage === 1"
+      (click)="loadContacts(currentPage - 1)"
+    >
+      Previous
+    </button>
+  
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+  
+    <button
+      class="btn btn-secondary"
+      [disabled]="currentPage === totalPages"
+      (click)="loadContacts(currentPage + 1)"
+    >
+      Next
+    </button>
+  </div>
+
   <!-- Toggle Add Contact Form -->
   <button
     class="btn btn-success mb-3 mt-2"

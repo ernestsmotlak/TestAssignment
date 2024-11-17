@@ -1,47 +1,78 @@
 import { Component, OnInit } from '@angular/core';
 import { ContactService, Contact } from './contact.service';
-import { CommonModule } from '@angular/common'; // Required for *ngFor
-import { AddContactComponent } from './add-contact/add-contact.component'; // Import AddContactComponent
+import { CommonModule } from '@angular/common';
+import { AddContactComponent } from './add-contact/add-contact.component';
 import { FormsModule } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  standalone: true, // Marking component as standalone
-  imports: [CommonModule, FormsModule, AddContactComponent], // Import AddContactComponent
+  standalone: true,
+  imports: [CommonModule, FormsModule, AddContactComponent],
 })
 export class AppComponent implements OnInit {
   contacts: Contact[] = [];
-  selectedContact: Contact | null = null; // Track the currently selected contact
-  showAddContactForm: boolean = false; // Control visibility of Add Contact form
-  isUpdateMode: boolean = false; // Flag to toggle update form
+  currentPage: number = 1; // Track the current page
+  pageSize: number = 10; // Default number of items per page
+  totalPages: number = 1; // Total number of pages
+  selectedContact: Contact | null = null;
+  showAddContactForm: boolean = false;
+  isUpdateMode: boolean = false;
 
   constructor(private contactService: ContactService) {}
 
   ngOnInit() {
-    this.contactService.getContacts().subscribe((data: Contact[]) => {
-      this.contacts = data;
+    this.loadContacts(1); // Load the first page of contacts
+  }
+
+  loadContacts(page: number) {
+    this.contactService.getPaginatedContacts(page, this.pageSize).subscribe({
+      next: (response) => {
+        this.contacts = response.data; // Update the contacts list
+        this.totalPages = response.totalPages; // Total pages from backend
+        this.currentPage = response.page; // Current page from backend
+      },
+      error: (err) => {
+        console.error('Error fetching paginated contacts:', err);
+        alert('Failed to load contacts.');
+      },
     });
   }
 
+  // Update page size and reload contacts
+  updatePageSize(newPageSize: number) {
+    this.pageSize = newPageSize; // Update page size
+    this.loadContacts(1); // Reload contacts for the first page with new size
+  }
+
+  // Jump to a specific page
+  jumpToPage(newPage: number) {
+    if (newPage > 0 && newPage <= this.totalPages) {
+      this.loadContacts(newPage);
+    } else {
+      alert(`Please enter a page number between 1 and ${this.totalPages}`);
+    }
+  }
+
+
   toggleAddContactForm() {
-    this.showAddContactForm = !this.showAddContactForm; // Toggle visibility
+    this.showAddContactForm = !this.showAddContactForm;
   }
 
   selectContact(contact: Contact) {
-    // Toggle the visibility of the selected contact
     if (this.selectedContact === contact) {
-      this.selectedContact = null; // Hide details if the same row is clicked again
-      this.isUpdateMode = false; // Reset update mode
+      this.selectedContact = null;
+      this.isUpdateMode = false;
     } else {
-      this.selectedContact = contact; // Show details for the clicked contact
-      this.isUpdateMode = false; // Ensure update mode is off
+      this.selectedContact = contact;
+      this.isUpdateMode = false;
     }
   }
 
   enableUpdateContact() {
-    this.isUpdateMode = true; // Enable update mode
+    this.isUpdateMode = true;
   }
 
   updateContact() {
@@ -57,19 +88,19 @@ export class AppComponent implements OnInit {
         );
 
         if (index !== -1) {
-          const updatedContact: Contact = {
-            id: this.selectedContact!.id || 0,
-            firstName: this.selectedContact!.firstName || '',
-            lastName: this.selectedContact!.lastName || '',
-            address: this.selectedContact!.address || '',
-            phoneNumber: this.selectedContact!.phoneNumber || '',
-          };
-
-          this.contacts[index] = updatedContact;
+          if (this.selectedContact) {
+            this.contacts[index] = {
+              id: this.selectedContact.id || 0, // Fallback to 0 if undefined
+              firstName: this.selectedContact.firstName || '',
+              lastName: this.selectedContact.lastName || '',
+              address: this.selectedContact.address || '',
+              phoneNumber: this.selectedContact.phoneNumber || '',
+            };
+          }
         }
 
-        this.isUpdateMode = false; // Exit update mode
-        this.selectedContact = null; // Reset selected contact
+        this.isUpdateMode = false;
+        this.selectedContact = null;
       },
       error: (err) => {
         console.error('Error updating contact:', err);
@@ -79,11 +110,10 @@ export class AppComponent implements OnInit {
   }
 
   cancelUpdate() {
-    this.isUpdateMode = false; // Exit update mode
+    this.isUpdateMode = false;
   }
 
   addContact(newContact: Contact) {
-    // Add the new contact to the list
     this.contacts.push({ ...newContact, id: this.contacts.length + 1 });
   }
 
@@ -93,14 +123,14 @@ export class AppComponent implements OnInit {
         next: () => {
           console.log('Contact deleted successfully:', contactId);
           alert('Contact deleted successfully.');
-  
-          // Remove the deleted contact from the contacts array
-          this.contacts = this.contacts.filter(contact => contact.id !== contactId);
-  
-          // Clear selected contact if it was deleted
+
+          this.contacts = this.contacts.filter(
+            (contact) => contact.id !== contactId
+          );
+
           if (this.selectedContact?.id === contactId) {
             this.selectedContact = null;
-            this.isUpdateMode = false; // Exit update mode if active
+            this.isUpdateMode = false;
           }
         },
         error: (err) => {

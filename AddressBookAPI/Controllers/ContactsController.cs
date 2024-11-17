@@ -19,11 +19,29 @@ namespace AddressBookAPI.Controllers
 
         // GET: api/contacts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Contact>>> GetContacts()
+        public async Task<IActionResult> GetContacts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            // Fetch all contacts from the database
-            var contacts = await _db.Contacts.ToListAsync();
-            return Ok(contacts); // Return contacts as JSON
+            if (page <= 0 || pageSize <= 0)
+            {
+                return BadRequest(new { message = "Page and page size must be greater than 0." });
+            }
+
+            var totalContacts = await _db.Contacts.CountAsync();
+            var contacts = await _db.Contacts
+                .Skip((page - 1) * pageSize) // Skip contacts from previous pages
+                .Take(pageSize)             // Take only the page size
+                .ToListAsync();
+
+            var response = new
+            {
+                totalContacts, // Total number of contacts
+                page,
+                pageSize,
+                totalPages = (int)Math.Ceiling((double)totalContacts / pageSize),
+                data = contacts
+            };
+
+            return Ok(response);
         }
 
         // GET: api/contacts/specificUser
