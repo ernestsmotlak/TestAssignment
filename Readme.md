@@ -24,3 +24,17 @@ Database Name: AddressBookDB
 
 ## Next
 
+# Pagination
+
+![Pagination](https://github.com/ernestsmotlak/TestAssignment/blob/main/Gifs/PaginationGif.gif)
+
+# Create New User
+![Create New User](https://github.com/ernestsmotlak/TestAssignment/blob/main/Gifs/CreateNewUserGif.gif)
+
+# Search
+
+![Search](https://github.com/ernestsmotlak/TestAssignment/blob/main/Gifs/SearchGif.gif)
+
+# Update Contact
+
+![Update Contact](https://github.com/ernestsmotlak/TestAssignment/blob/main/Gifs/UpdateContactGif.gif)
