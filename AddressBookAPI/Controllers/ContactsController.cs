@@ -19,22 +19,47 @@ namespace AddressBookAPI.Controllers
 
         // GET: api/contacts
         [HttpGet]
-        public async Task<IActionResult> GetContacts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetContacts(
+            [FromQuery] string? firstName = null,
+            [FromQuery] string? lastName = null,
+            [FromQuery] string? phoneNumber = null,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
         {
             if (page <= 0 || pageSize <= 0)
             {
                 return BadRequest(new { message = "Page and page size must be greater than 0." });
             }
 
-            var totalContacts = await _db.Contacts.CountAsync();
-            var contacts = await _db.Contacts
-                .Skip((page - 1) * pageSize) // Skip contacts from previous pages
-                .Take(pageSize)             // Take only the page size
+            // Start with all contacts
+            var query = _db.Contacts.AsQueryable();
+
+            // Apply filters if search parameters are provided
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                query = query.Where(c => c.FirstName.Contains(firstName));
+            }
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                query = query.Where(c => c.LastName.Contains(lastName));
+            }
+            if (!string.IsNullOrEmpty(phoneNumber))
+            {
+                query = query.Where(c => c.PhoneNumber.Contains(phoneNumber));
+            }
+
+            // Get total count for pagination
+            var totalContacts = await query.CountAsync();
+
+            // Apply pagination
+            var contacts = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
             var response = new
             {
-                totalContacts, // Total number of contacts
+                totalContacts,
                 page,
                 pageSize,
                 totalPages = (int)Math.Ceiling((double)totalContacts / pageSize),

@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
   standalone: true,
   imports: [CommonModule, FormsModule, AddContactComponent],
 })
+
 export class AppComponent implements OnInit {
   contacts: Contact[] = [];
   currentPage: number = 1; // Track the current page
@@ -21,6 +22,13 @@ export class AppComponent implements OnInit {
   showAddContactForm: boolean = false;
   isUpdateMode: boolean = false;
 
+  // Add the searchCriteria property here
+  searchCriteria = {
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+  };
+
   constructor(private contactService: ContactService) {}
 
   ngOnInit() {
@@ -28,17 +36,32 @@ export class AppComponent implements OnInit {
   }
 
   loadContacts(page: number) {
-    this.contactService.getPaginatedContacts(page, this.pageSize).subscribe({
-      next: (response) => {
-        this.contacts = response.data; // Update the contacts list
-        this.totalPages = response.totalPages; // Total pages from backend
-        this.currentPage = response.page; // Current page from backend
-      },
-      error: (err) => {
-        console.error('Error fetching paginated contacts:', err);
-        alert('Failed to load contacts.');
-      },
-    });
+    this.contactService
+      .getPaginatedContacts(page, this.pageSize, this.searchCriteria)
+      .subscribe({
+        next: (response) => {
+          this.contacts = response.data; // Update contacts
+          this.totalPages = response.totalPages; // Update total pages
+          this.currentPage = response.page; // Update current page
+        },
+        error: (err) => {
+          console.error('Error fetching contacts:', err);
+          alert('Failed to load contacts.');
+        },
+      });
+  }
+
+  searchContacts() {
+    this.loadContacts(1); // Reload contacts with search criteria
+  }
+
+  clearSearch() {
+    this.searchCriteria = {
+      firstName: '',
+      lastName: '',
+      phoneNumber: '',
+    };
+    this.loadContacts(1); // Reload all contacts
   }
 
   // Update page size and reload contacts
@@ -55,7 +78,6 @@ export class AppComponent implements OnInit {
       alert(`Please enter a page number between 1 and ${this.totalPages}`);
     }
   }
-
 
   toggleAddContactForm() {
     this.showAddContactForm = !this.showAddContactForm;

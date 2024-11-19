@@ -15,7 +15,7 @@
         {{ size }}
       </option>
     </select>
-  
+
     <!-- Jump to Page -->
     <label for="jumpPage">Go to Page:</label>
     <input
@@ -26,7 +26,7 @@
       min="1"
       [max]="totalPages"
     />
-  
+
     <!-- Previous and Next Buttons -->
     <button
       class="btn btn-secondary"
@@ -35,9 +35,9 @@
     >
       Previous
     </button>
-  
+
     <span>Page {{ currentPage }} of {{ totalPages }}</span>
-  
+
     <button
       class="btn btn-secondary"
       [disabled]="currentPage === totalPages"
@@ -46,6 +46,39 @@
       Next
     </button>
   </div>
+
+  <div class="search-form-container">
+    <h3>Search Contacts</h3>
+    <form (submit)="searchContacts()" class="search-form">
+      <input
+        type="text"
+        placeholder="First Name"
+        [(ngModel)]="searchCriteria.firstName"
+        name="firstName"
+      />
+      <input
+        type="text"
+        placeholder="Last Name"
+        [(ngModel)]="searchCriteria.lastName"
+        name="lastName"
+      />
+      <input
+        type="text"
+        placeholder="Phone Number"
+        [(ngModel)]="searchCriteria.phoneNumber"
+        name="phoneNumber"
+      />
+      <button type="submit" class="btn btn-primary">Search</button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="clearSearch()"
+      >
+        Clear
+      </button>
+    </form>
+  </div>
+  
 
   <!-- Toggle Add Contact Form -->
   <button
@@ -70,10 +103,17 @@
       <p><strong>Last Name:</strong> {{ selectedContact.lastName }}</p>
       <p><strong>Address:</strong> {{ selectedContact.address }}</p>
       <p><strong>Phone Number:</strong> {{ selectedContact.phoneNumber }}</p>
-    
+
       <div class="action-buttons mt-3">
-        <button class="btn btn-danger" (click)="deleteContact(selectedContact.id!)">Delete</button>
-        <button class="btn btn-primary" (click)="enableUpdateContact()">Update</button>
+        <button
+          class="btn btn-danger"
+          (click)="deleteContact(selectedContact.id!)"
+        >
+          Delete
+        </button>
+        <button class="btn btn-primary" (click)="enableUpdateContact()">
+          Update
+        </button>
       </div>
     </div>
 
@@ -121,7 +161,13 @@
           />
         </div>
         <button type="submit" class="btn btn-primary mt-3">Save</button>
-        <button type="button" class="btn btn-secondary mt-3" (click)="cancelUpdate()">Cancel</button>
+        <button
+          type="button"
+          class="btn btn-secondary mt-3"
+          (click)="cancelUpdate()"
+        >
+          Cancel
+        </button>
       </form>
     </div>
 
@@ -132,7 +178,8 @@
       [class.selected]="selectedContact === contact"
       [style.cursor]="'pointer'"
     >
-      <strong>{{ contact.firstName }} {{ contact.lastName }}</strong><br />
+      <strong>{{ contact.firstName }} {{ contact.lastName }}</strong
+      ><br />
       Address: {{ contact.address }}<br />
       Phone: {{ contact.phoneNumber }}
     </li>
